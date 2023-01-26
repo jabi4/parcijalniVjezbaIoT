@@ -1,17 +1,15 @@
 from tkinter import Tk
-from screens.mainScreen import ConfigScreen
+from screens.IoTSimulator import IoTSimulator
 class App(Tk):
 
     def __init__(self):
         super().__init__()
-        self.title("Config")
+        self.title("Ponavljanje parcijalni IoT")
         self.geometry("600x400")
-        self.createServerConnection()
+        self.createIoT()
 
-    def createServerConnection(self):
-        ConfigScreen(self)
-
-
+    def createIoT(self):
+        IoTSimulator(self)
 
 
 
