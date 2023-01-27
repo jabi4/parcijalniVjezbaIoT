@@ -2,7 +2,6 @@ from util.DBUtils import DBUtils
 from datasource.dto.ConfigDto import ConfigDto
 import db
 from datetime import datetime as dt
-import sqlite3
 
 class ConfigurationService:
 

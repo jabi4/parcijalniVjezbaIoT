@@ -1,4 +1,5 @@
 from util.JSONSerializator import JSONSerializator
+import json
 
 class ConfigDto(JSONSerializator):
 
@@ -18,6 +19,16 @@ class ConfigDto(JSONSerializator):
         config.pressure = model[4]
         config.publish = model[5]
         return config
+
+    def getJson(self):
+        model = {
+            'type': self.type,
+            'temperature': self.temperature,
+            'humidity': self.humidity,
+            'pressure': self.pressure,
+            'publish': self.publish
+        }
+        return json.dumps(model)
 
     def __repr__(self):
         return str(self.__dict__)

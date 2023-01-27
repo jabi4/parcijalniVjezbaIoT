@@ -1,15 +1,14 @@
 from tkinter import ttk, LabelFrame, Frame
-import tkinter as tk
-from PIL import Image, ImageTk
 from mqtt.MqttClient import MqttClient
 from components.SelectTypeComponent import SelectTypeComponent
 from components.ConfigComponent import ConfigComponent, ConfigDto
 from service.ConfigurationService import ConfigurationService
+from service.Publisher import Publisher
 
 
 
 
-class IoTSimulator(Frame):
+class IoTSimulator(ttk.Frame):
 
     SERVER_URL = "edu-agrdan.plusvps.com"
 
@@ -19,6 +18,9 @@ class IoTSimulator(Frame):
         self.mqtt = MqttClient(self.SERVER_URL, 1883, "parcijalni/+")
         self.mqtt.start()
         self.configurationService = ConfigurationService()
+        self.publishIndoor = Publisher(self.mqtt, self.)
+
+
         self.setView()
         self.setupConfig()
 
@@ -40,9 +42,8 @@ class IoTSimulator(Frame):
             self.configSelect.setConfiguration(empty)
 
     def handleSaveButton(self):
-        self.handleRadioButton()
         configDto = self.configSelect.getConfiguration()
-        configDto.type = self.type
+        configDto.type = self.typeSelect.choices[self.typeSelect.radioValue.get()]
         self.configurationService.insertOrUpdate(configDto)
 
 
