@@ -1,7 +1,8 @@
 from util.DBUtils import DBUtils
 from datasource.dto.ConfigDto import ConfigDto
 import db
- from datetime import datetime as dt
+from datetime import datetime as dt
+import sqlite3
 
 class ConfigurationService:
 
@@ -38,10 +39,19 @@ class ConfigurationService:
         else:
             query = f"""
                 UPDATE {self.TABLE_NAME}
-                SET temperature={configDto.temperature}, humidity={configDto.humidity, pressure={configDto.pressure}, publish={configDto.publish}, lastModified='{str(dt.now).timestamp())}'
+                SET temperature={configDto.temperature}, humidity={configDto.humidity}, pressure={configDto.pressure}, publish={configDto.publish}, lastModified='{str(dt.now.timestamp())}'
                 WHERE type='{configDto.type}';
             """
         DBUtils.izvrsiIZapisi(self.connection, query)
+
+    def readConfiguration(self, type):
+        config = self._ifConfigExists(type)
+        if config is not None:
+            configDto = ConfigDto.createFromEntity(config)
+            return configDto
+        else:
+            return None
+
 
     def _ifConfigExists(self, type):
         query = f"SELECT * FROM {self.TABLE_NAME} WHERE type='{type}';"

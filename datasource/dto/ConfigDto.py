@@ -9,5 +9,15 @@ class ConfigDto(JSONSerializator):
         self.publish = False
         self.type = None
 
+    @staticmethod
+    def createFromEntity(model: tuple):
+        config = ConfigDto()
+        config.type = model[1]
+        config.temperature = model[2]
+        config.humidity = model[3]
+        config.pressure = model[4]
+        config.publish = model[5]
+        return config
+
     def __repr__(self):
         return str(self.__dict__)

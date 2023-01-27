@@ -41,9 +41,9 @@ class ConfigComponent(ttk.LabelFrame):
 
     def getConfiguration(self):
         config = ConfigDto()
-        config.temperature = self.temperature.get()
-        config.humidity = self.humidity.get()
-        config.pressure = self.pressure.get()
+        config.temperature = int(self.temperature.get())
+        config.humidity = int(self.humidity.get())
+        config.pressure = int(self.pressure.get())
         config.publish = self.simulate.get()
         return config
 

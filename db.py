@@ -1,6 +1,6 @@
 import sqlite3
 
-def initDB()
+def initDB():
     DB = "IoT.db"
     connection = sqlite3.connect(DB)
     return connection

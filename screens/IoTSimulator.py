@@ -4,6 +4,7 @@ from PIL import Image, ImageTk
 from mqtt.MqttClient import MqttClient
 from components.SelectTypeComponent import SelectTypeComponent
 from components.ConfigComponent import ConfigComponent, ConfigDto
+from service.ConfigurationService import ConfigurationService
 
 
 
@@ -14,11 +15,12 @@ class IoTSimulator(Frame):
 
     def __init__(self, parent):
         super().__init__(master=parent)
-
+        self.grid()
         self.mqtt = MqttClient(self.SERVER_URL, 1883, "parcijalni/+")
         self.mqtt.start()
-        self.grid()
+        self.configurationService = ConfigurationService()
         self.setView()
+        self.setupConfig()
 
 
     def setView(self):
@@ -26,14 +28,22 @@ class IoTSimulator(Frame):
         self.configSelect = ConfigComponent(self, 0, 1)
 
     def handleRadioButton(self):
+        self.setupConfig()
+
+    def setupConfig(self):
         self.type = self.typeSelect.choices[self.typeSelect.radioValue.get()]
-        print(self.type)
+        configDto: ConfigDto = self.configurationService.readConfiguration(self.type)
+        if configDto is not None:
+            self.configSelect.setConfiguration(configDto)
+        else:
+            empty = ConfigDto()
+            self.configSelect.setConfiguration(empty)
 
     def handleSaveButton(self):
         self.handleRadioButton()
         configDto = self.configSelect.getConfiguration()
         configDto.type = self.type
-        print(configDto)
+        self.configurationService.insertOrUpdate(configDto)
 
 
 
