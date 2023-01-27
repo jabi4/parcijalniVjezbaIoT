@@ -1,9 +1,10 @@
 from tkinter import ttk, LabelFrame, Frame
 from mqtt.MqttClient import MqttClient
-from components.SelectTypeComponent import SelectTypeComponent
+from components.SelectTypeComponent import SelectTypeComponent, TypeEnum
 from components.ConfigComponent import ConfigComponent, ConfigDto
 from service.ConfigurationService import ConfigurationService
 from service.Publisher import Publisher
+
 
 
 
@@ -17,9 +18,14 @@ class IoTSimulator(ttk.Frame):
         self.grid()
         self.mqtt = MqttClient(self.SERVER_URL, 1883, "parcijalni/+")
         self.mqtt.start()
+        self.enum = TypeEnum
         self.configurationService = ConfigurationService()
-        self.publishIndoor = Publisher(self.mqtt, self.)
-
+        self.publishIndoor = Publisher(self.mqtt, self.enum.INDOOR.value)
+        self.publishIndoor.start()
+        self.publishOutdoor = Publisher(self.mqtt, self.enum.OUTDOOR.value)
+        self.publishOutdoor.start()
+        self.publishCity = Publisher(self.mqtt, self.enum.CITY.value)
+        self.publishCity.start()
 
         self.setView()
         self.setupConfig()
@@ -45,6 +51,13 @@ class IoTSimulator(ttk.Frame):
         configDto = self.configSelect.getConfiguration()
         configDto.type = self.typeSelect.choices[self.typeSelect.radioValue.get()]
         self.configurationService.insertOrUpdate(configDto)
+        match configDto.type:
+            case self.enum.INDOOR:
+                self.publishIndoor.update(configDto)
+            case self.enum.OUTDOOR:
+                self.publishOutdoor.update(configDto)
+            case self.enum.CITY:
+                self.publishCity.update(configDto)
 
 
 
