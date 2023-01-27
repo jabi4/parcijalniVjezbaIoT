@@ -11,7 +11,7 @@ class ConfigurationService:
         self.connection = db.initDB()
 
     def _createTable(self):
-        query = """
+        query = f"""
             CREATE TABLE IF NOT EXISTS
             {self.TABLE_NAME} (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
